@@ -839,6 +839,14 @@ const tests: { [name: string]: StatusOrEvaluator } = {
     const utf8 = '\x47\xC3\x96\xC3\x96\xC3\x90\x0A';
     const path = `${TemporaryDirectoryPath}/test-file`;
     try {
+      // NOTE: This is written to ensure that writeFile() overwrites
+      // existing files (see: https://github.com/birdofpreyru/react-native-fs/issues/46).
+      await writeFile(
+        path,
+        'existing file content ===============================================',
+        'ascii',
+      );
+
       await writeFile(path, utf8, 'ascii');
       let res = await readFile(path);
       if (res !== good) return 'fail';
